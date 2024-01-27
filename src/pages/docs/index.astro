@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import { Button } from "@/components/ui/button";
+const allPosts = await getCollection("docs");
+---
+
+<ul>
+  {
+    allPosts.map((post) => (
+      <div>
+        <p>{post.data.title}</p>
+        <Button>
+          <a href={`/docs/${post.slug}`}>Link</a>
+        </Button>
+      </div>
+    ))
+  }
+</ul>
