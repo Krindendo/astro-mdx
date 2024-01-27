@@ -1,15 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Button from "../components/Button.astro";
+import { Button } from "@/components/ui/button.tsx";
 ---
 
 <Layout title="Welcome to Astro.">
   <main>
     <div class="grid place-items-center h-screen content-center">
-      <Button>Tailwind Button in Astro!</Button>
+      <Button id="button">Tailwind Button in Astro!</Button>
     </div>
   </main>
 </Layout>
+
+<script>
+  const button = document.getElementById("button");
+  button?.addEventListener("click", () => {
+    alert("clicked!");
+  });
+</script>
 
 <style>
   main {
