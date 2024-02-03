@@ -1,0 +1,19 @@
+---
+import { siteConfig } from "../config/site";
+import { cn } from "../lib/utils";
+
+import { Icons } from "./icons";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a href="/" aria-label="Home" class={cn("flex gap-2", className)}>
+  <Icons.logo />
+  <span class="hidden font-bold sm:inline-block">
+    {siteConfig.name}
+  </span>
+</a>
