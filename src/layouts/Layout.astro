@@ -1,7 +1,11 @@
 ---
-import '@/styles/globals.css'
+import SiteNavigation from "../components/site-navigation.astro";
+// import { SectionProvider } from "../components/site-provider";
+import TailwindIndicator from "../components/tailwind-indicator.astro";
+import SiteFooter from "../components/site-footer.astro";
+
 interface Props {
-	title: string;
+  title: string;
 }
 
 const { title } = Astro.props;
@@ -9,15 +13,62 @@ const { title } = Astro.props;
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-background font-sans antialiased">
+    <div class="flex min-h-screen flex-col lg:ml-72 xl:ml-80">
+      <SiteNavigation />
+      <div class="relative flex-1 px-4 pt-14 sm:px-6 lg:px-8">
+        <main class="flex flex-col py-16"><slot /></main>
+      </div>
+      <SiteFooter />
+    </div>
+    <TailwindIndicator />
+
+    <!-- <SectionProvider>
+      <div class="flex min-h-screen flex-col lg:ml-72 xl:ml-80">
+        <SiteNavigation />
+        <div class="relative flex-1 px-4 pt-14 sm:px-6 lg:px-8">
+          <main class="flex flex-col py-16"><slot /></main>
+        </div>
+        <SiteFooter />
+      </div>
+      <TailwindIndicator />
+    </SectionProvider> -->
+  </body>
+
+  <style is:global>
+    @font-face {
+      font-family: "CalSans";
+      src:
+        url("/fonts/CalSans-SemiBold.woff2") format("woff2"),
+        url("/fonts/CalSans-SemiBold.woff") format("woff"),
+        url("/fonts/CalSans-SemiBold.ttf") format("truetype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Inter";
+      src: url("/fonts/Inter-Bold.ttf") format("truetype");
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Inter";
+      src: url("/fonts/Inter-Regular.ttf") format("truetype");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 </html>
