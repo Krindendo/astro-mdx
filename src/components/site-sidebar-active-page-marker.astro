@@ -1,0 +1,18 @@
+---
+import { SidebarNavItem } from "../types";
+
+interface Props {
+  group: SidebarNavItem;
+  pathname: string;
+}
+
+const { group, pathname } = Astro.props;
+
+const itemHeight = 28;
+const offset = 4;
+const activePageIndex =
+  group.items?.findIndex((item) => item.href === pathname) ?? 0;
+const top = offset + activePageIndex * itemHeight;
+---
+
+<div class="absolute left-2 h-6 w-px bg-orange-500" style={{ top }}></div>
