@@ -1,6 +1,11 @@
 ---
 import DocsPageHeader from "./docs-page-header.astro";
-import { InjectTOC, Item } from "./site-provider";
+import {
+  setSections,
+  setSectionIds,
+  setVisibleSections,
+  Item,
+} from "../stores/site";
 
 interface DocsConfig {
   title: string;
@@ -15,6 +20,10 @@ interface Props {
 }
 
 const { toc, title, description } = Astro.props;
+
+setSections({ items: toc });
+setSectionIds({ items: toc });
+setVisibleSections([]);
 
 /*
   items: [
@@ -31,6 +40,5 @@ const { toc, title, description } = Astro.props;
       <DocsPageHeader heading={title} text={description} />
       <div class="pb-12 pt-8"><slot /></div>
     </div>
-    <InjectTOC toc={toc} />
   </main>
 </div>
