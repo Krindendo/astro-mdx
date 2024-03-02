@@ -4,36 +4,30 @@ import { HTMLAttributes } from "astro/types";
 
 import { docsConfig } from "../config/docs";
 import { cn } from "../lib/utils";
-import ModeToggle from "./mode-toggle.astro";
-import {
-  SiteSidebarMobile,
-  useIsInsideMobileNavigation,
-  useMobileNavigationStore,
-} from "../components/site-sidebar-mobile";
+import { ModeToggle } from "./mode-toggle";
+// import {
+//   SiteSidebarMobile,
+//   useIsInsideMobileNavigation,
+//   useMobileNavigationStore,
+// } from "../components/site-sidebar-mobile";
 import Logo from "./logo.astro";
 
 interface Props extends HTMLAttributes<"div"> {}
 
 const { class: className, ...props } = Astro.props;
+const segment = "";
 ---
 
 <div
+  id="header"
   class={cn(
     className,
-    "fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 transition sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80",
-    !isInsideMobileNavigation &&
-      "backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80",
-    isInsideMobileNavigation
-      ? "bg-white dark:bg-zinc-900"
-      : "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
+    "fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 transition sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80"
   )}
 >
   <div
-    class={cn(
-      "absolute inset-x-0 top-full h-px transition",
-      (isInsideMobileNavigation || !mobileNavIsOpen) &&
-        "bg-zinc-900/10 dark:bg-white/10"
-    )}
+    id="header-wrapper"
+    class={cn("absolute inset-x-0 top-full h-px transition")}
   >
   </div>
   <div class="flex items-center gap-5 lg:hidden">
@@ -42,7 +36,7 @@ const { class: className, ...props } = Astro.props;
   </div>
   <div class="ml-auto flex items-center gap-5">
     <nav class="hidden md:block">
-      <ul role="list" class="flex items-center gap-8">
+      <ul class="flex items-center gap-8">
         {
           docsConfig.mainNav?.map((item) => (
             <li>
@@ -65,13 +59,48 @@ const { class: className, ...props } = Astro.props;
     </nav>
     <div class="hidden h-5 w-px bg-zinc-900/10 dark:bg-white/10 md:block"></div>
     <div class="flex gap-4">
-      <ModeToggle />
+      <ModeToggle client:only />
     </div>
   </div>
 </div>
 
 <script is:inline>
-  const segment = useSelectedLayoutSegment();
-  const { isOpen: mobileNavIsOpen } = useMobileNavigationStore();
-  const isInsideMobileNavigation = useIsInsideMobileNavigation();
+  import { $isOpen as mobileNavIsOpen } from "../stores/sidebar";
+  const isInsideMobileNavigation = false;
+  const htmlHeader = document.getElementById("header");
+
+  if (htmlHeader) {
+    if (isInsideMobileNavigation) {
+      htmlHeader.classList.add("bg-white dark:bg-zinc-900");
+    } else {
+      htmlHeader.classList.add(
+        "backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80"
+      );
+      htmlHeader.classList.add(
+        "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
+      );
+    }
+  }
+  /*
+      !isInsideMobileNavigation &&
+      "backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80",
+    isInsideMobileNavigation
+      ? "bg-white dark:bg-zinc-900"
+      : "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
+  */
+
+  const htmlHeaderWrapper = document.getElementById("header-wrapper");
+
+  if (htmlHeaderWrapper) {
+    if (isInsideMobileNavigation || !mobileNavIsOpen) {
+      htmlHeaderWrapper.classList.add("bg-zinc-900/10 dark:bg-white/10");
+    } else {
+      htmlHeaderWrapper.classList.remove("bg-zinc-900/10 dark:bg-white/10");
+    }
+  }
+
+  /*
+        (isInsideMobileNavigation || !mobileNavIsOpen) &&
+        "bg-zinc-900/10 dark:bg-white/10"
+  */
 </script>
