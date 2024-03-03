@@ -6,10 +6,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useDarkMode } from "../hooks/useDarkMode.ts";
+import { useTheme } from "../hooks/useTheme.ts";
 
 export function ModeToggle() {
-  const { setDarkMode } = useDarkMode();
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -23,21 +23,21 @@ export function ModeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           className="text-muted-foreground hover:text-foreground"
-          onClick={() => setDarkMode("light")}
+          onClick={() => setTheme("light")}
         >
           <Icons.sun className="mr-2 h-4 w-4" />
           <span>Light</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-muted-foreground hover:text-foreground"
-          onClick={() => setDarkMode("dark")}
+          onClick={() => setTheme("dark")}
         >
           <Icons.moon className="mr-2 h-4 w-4" />
           <span>Dark</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-muted-foreground hover:text-foreground"
-          onClick={() => setDarkMode("system")}
+          onClick={() => setTheme("system")}
         >
           <Icons.laptop className="mr-2 h-4 w-4" />
           <span>System</span>
