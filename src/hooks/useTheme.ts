@@ -21,6 +21,9 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
   const [theme, setThemeState] = React.useState(() =>
     getTheme(LOCAL_STORAGE_KEY, "system")
   );
+  const [resolvedTheme, setResolvedTheme] = React.useState(() =>
+    getTheme(LOCAL_STORAGE_KEY)
+  );
 
   const applyTheme = React.useCallback((theme: ThemeMode) => {
     let resolved = theme;
@@ -60,7 +63,7 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
   const handleMediaQuery = React.useCallback(
     (e: MediaQueryListEvent | MediaQueryList) => {
       const resolved = getSystemTheme();
-      setThemeState(resolved);
+      setResolvedTheme(resolved);
 
       if (theme === "system") {
         applyTheme("system");
@@ -115,7 +118,7 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
   };
 }
 
-const getTheme = (key: string, fallback: string) => {
+const getTheme = (key: string, fallback?: string) => {
   let theme;
   try {
     theme = localStorage.getItem(key) || undefined;

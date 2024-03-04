@@ -1,0 +1,64 @@
+---
+import { cn } from "../lib/utils";
+import { TableOfContents } from "../types";
+import SiteSidebarNavLink from "./site-sidebar-nav-link.astro";
+---
+
+<astro-tree data-message={message}>
+  <button>Say hi!</button>
+</astro-tree>
+
+<script is:inline>
+  class Tree extends HTMLElement {
+    constructor() {
+      super();
+
+      // Read the message from the data attribute.
+      const message = this.dataset.message;
+      const button = this.querySelector("button");
+      button.addEventListener("click", () => {
+        alert(message);
+      });
+    }
+  }
+
+  // const generateTree = ({ tree, level = 1 }) => {
+  //   if (tree.items?.length === undefined || level > SIDEBAR_DEEP_LEVEL) {
+  //     return null;
+  //   }
+
+  //   if (level === 1) {
+  //     return (
+  //       <ul>
+  //         {tree.items?.map((section) => (
+  //           <li>
+  //             <SiteSidebarNavLink href={section.url} isAnchorLink>
+  //               {section.title}
+  //             </SiteSidebarNavLink>
+  //             {tree.items?.length ? (
+  //               <Tree tree={section} level={level + 1} />
+  //             ) : null}
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     );
+  //   }
+
+  //   return (
+  //     <ul class={cn("", { "pl-4": level !== 1 })}>
+  //       {tree.items?.map((section) => (
+  //         <li>
+  //           <SiteSidebarNavLink href={section.url} isAnchorLink>
+  //             {section.title}
+  //           </SiteSidebarNavLink>
+  //           {tree.items?.length ? (
+  //             <Tree tree={section} level={level + 1} />
+  //           ) : null}
+  //         </li>
+  //       ))}
+  //     </ul>
+  //   );
+  // };
+
+  customElements.define("astro-tree", Tree);
+</script>

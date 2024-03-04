@@ -1,0 +1,50 @@
+---
+import { cn } from "../lib/utils";
+import { SidebarNavItem } from "../types";
+import SiteSidebarActivePageMarker from "./site-sidebar-active-page-marker.astro";
+import SiteSidebarNavLink from "./site-sidebar-nav-link.astro";
+
+interface Props {
+  group: SidebarNavItem;
+  class?: string;
+}
+
+const { class: className, group } = Astro.props;
+
+const isActiveGroup =
+  group.items?.findIndex((link) => link.href === pathname) !== -1;
+---
+
+<li class={cn("relative mt-6", className)}>
+  <h2 class="text-xs font-semibold text-zinc-900 dark:text-white">
+    {group.title}
+  </h2>
+  <div class="relative mt-3 pl-2">
+    {
+      isActiveGroup && (
+        <SiteSidebarActivePageMarker group={group} pathname={pathname} />
+      )
+    }
+    <ul role="list" class="border-l border-transparent">
+      {
+        group.items?.map((item) => (
+          <li class="relative">
+            <SiteSidebarNavLink
+              href={item.href || "#"}
+              active={item.href === pathname}
+            >
+              {item.title}
+            </SiteSidebarNavLink>
+            {item.href === pathname && sections.items?.length ? (
+              <SiteSidebarTree tree={sections} />
+            ) : null}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</li>
+
+<script is:inline>
+  import { sections } from "../stores/site";
+</script>
