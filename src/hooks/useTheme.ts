@@ -4,6 +4,7 @@ const colorSchemes = ["light", "dark", "system"];
 const MEDIA = "(prefers-color-scheme: dark)";
 const LOCAL_STORAGE_KEY = "theme";
 
+export type SystemThemeMode = "light" | "dark";
 export type ThemeMode = "light" | "dark" | "system";
 
 type ThemeModeOptions = {
@@ -12,17 +13,18 @@ type ThemeModeOptions = {
 
 type ThemeModeResult = {
   themes: string[];
-  theme?: string;
+  theme: ThemeMode;
+  systemTheme: SystemThemeMode;
   setTheme: (theme: ThemeMode) => void;
   isDarkMode: boolean;
 };
 
 export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
-  const [theme, setThemeState] = React.useState(() =>
+  const [theme, setThemeState] = React.useState<ThemeMode>(() =>
     getTheme(LOCAL_STORAGE_KEY, "system")
   );
-  const [resolvedTheme, setResolvedTheme] = React.useState(() =>
-    getTheme(LOCAL_STORAGE_KEY)
+  const [systemTheme, setSystemTheme] = React.useState<SystemThemeMode>(() =>
+    getSystemTheme()
   );
 
   const applyTheme = React.useCallback((theme: ThemeMode) => {
@@ -35,7 +37,6 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
     }
 
     const d = document.documentElement;
-
     d.classList.remove(...colorSchemes);
 
     if (resolved) {
@@ -46,7 +47,7 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
     // @ts-ignore
     d.style.colorScheme = colorScheme;
 
-    //disableAnimation()
+    disableAnimation();
   }, []);
 
   const setTheme = React.useCallback((theme: ThemeMode) => {
@@ -63,7 +64,7 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
   const handleMediaQuery = React.useCallback(
     (e: MediaQueryListEvent | MediaQueryList) => {
       const resolved = getSystemTheme();
-      setResolvedTheme(resolved);
+      setSystemTheme(resolved);
 
       if (theme === "system") {
         applyTheme("system");
@@ -113,17 +114,20 @@ export function useTheme(options?: ThemeModeOptions): ThemeModeResult {
   return {
     isDarkMode,
     theme,
+    systemTheme,
     themes: colorSchemes,
     setTheme,
   };
 }
 
+// Helpers
 const getTheme = (key: string, fallback?: string) => {
   let theme;
   try {
     theme = localStorage.getItem(key) || undefined;
-  } catch (e) {
+  } catch (error) {
     // Unsupported
+    console.error(error);
   }
   return (theme || fallback) as ThemeMode;
 };
@@ -134,66 +138,22 @@ const getSystemTheme = () => {
   return systemTheme;
 };
 
-//const defaultValue = options?.defaultValue ?? "system";
+const disableAnimation = () => {
+  const css = document.createElement("style");
+  css.appendChild(
+    document.createTextNode(
+      `*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}`
+    )
+  );
+  document.head.appendChild(css);
 
-//const isDarkOS = window.matchMedia(COLOR_SCHEME_QUERY).matches;
-//const [mode, setMode] = useLocalStorage(LOCAL_STORAGE_KEY, defaultValue);
+  return () => {
+    // Force restyle
+    (() => window.getComputedStyle(document.body))();
 
-//const isDarkMode = mode === "dark" || (mode === "system" && isDarkOS);
-
-// if (isDarkMode) {
-//   window.document.documentElement.classList.add("dark");
-// } else {
-//   window.document.documentElement.classList.remove("dark");
-// }
-
-/*
-  const theme = (() => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-      return localStorage.getItem("theme");
-    }
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
-    }
-    return "light";
-  })();
-
-  if (theme === "light") {
-    document.documentElement.classList.remove("dark");
-  } else {
-    document.documentElement.classList.add("dark");
-  }
-
-  window.localStorage.setItem("theme", theme);
-
-  //"light" | "dark" | "system"
-  const setTheme = (theme) => {
-    const element = document.documentElement;
-    if (theme === "system") {
-      theme = "light";
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        theme = "dark";
-      }
-    }
-
-    if (theme === "dark") {
-      element.classList.add("dark");
-    } else {
-      element.classList.remove("dark");
-    }
-
-    const isDark = element.classList.contains("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+    // Wait for next tick before removing
+    setTimeout(() => {
+      document.head.removeChild(css);
+    }, 1);
   };
-
-  document.getElementById("select-light").addEventListener("click", () => {
-    setTheme("light");
-  });
-  document.getElementById("select-dark").addEventListener("click", () => {
-    setTheme("dark");
-  });
-  document.getElementById("select-system").addEventListener("click", () => {
-    setTheme("system");
-  });
-
-*/
+};
