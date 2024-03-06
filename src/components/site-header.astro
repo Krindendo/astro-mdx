@@ -64,20 +64,25 @@ const segment = "";
   </div>
 </div>
 
-<script is:inline>
-  import { $isOpen as mobileNavIsOpen } from "../stores/sidebar";
+<script>
+  import { $isOpen } from "../stores/sidebar";
+
   const isInsideMobileNavigation = false;
   const htmlHeader = document.getElementById("header");
 
   if (htmlHeader) {
     if (isInsideMobileNavigation) {
-      htmlHeader.classList.add("bg-white dark:bg-zinc-900");
+      htmlHeader.classList.add("bg-white", "dark:bg-zinc-900");
     } else {
       htmlHeader.classList.add(
-        "backdrop-blur-sm dark:backdrop-blur lg:left-72 xl:left-80"
+        "backdrop-blur-sm",
+        "dark:backdrop-blur",
+        "lg:left-72",
+        "xl:left-80"
       );
       htmlHeader.classList.add(
-        "bg-white/[var(--bg-opacity-light)] dark:bg-zinc-900/[var(--bg-opacity-dark)]"
+        "bg-white/[var(--bg-opacity-light)]",
+        "dark:bg-zinc-900/[var(--bg-opacity-dark)]"
       );
     }
   }
@@ -92,10 +97,10 @@ const segment = "";
   const htmlHeaderWrapper = document.getElementById("header-wrapper");
 
   if (htmlHeaderWrapper) {
-    if (isInsideMobileNavigation || !mobileNavIsOpen) {
-      htmlHeaderWrapper.classList.add("bg-zinc-900/10 dark:bg-white/10");
+    if (isInsideMobileNavigation || !$isOpen.value) {
+      htmlHeaderWrapper.classList.add("bg-zinc-900/10", "dark:bg-white/10");
     } else {
-      htmlHeaderWrapper.classList.remove("bg-zinc-900/10 dark:bg-white/10");
+      htmlHeaderWrapper.classList.remove("bg-zinc-900/10", "dark:bg-white/10");
     }
   }
 

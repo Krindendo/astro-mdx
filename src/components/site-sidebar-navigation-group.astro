@@ -3,6 +3,8 @@ import { cn } from "../lib/utils";
 import { SidebarNavItem } from "../types";
 import SiteSidebarActivePageMarker from "./site-sidebar-active-page-marker.astro";
 import SiteSidebarNavLink from "./site-sidebar-nav-link.astro";
+import SiteSidebarTree from "./site-sidebar-tree.astro";
+import { $sections } from "../stores/site";
 
 interface Props {
   group: SidebarNavItem;
@@ -10,6 +12,8 @@ interface Props {
 }
 
 const { class: className, group } = Astro.props;
+
+const pathname = ""; //usePathname
 
 const isActiveGroup =
   group.items?.findIndex((link) => link.href === pathname) !== -1;
@@ -35,8 +39,8 @@ const isActiveGroup =
             >
               {item.title}
             </SiteSidebarNavLink>
-            {item.href === pathname && sections.items?.length ? (
-              <SiteSidebarTree tree={sections} />
+            {item.href === pathname && $sections.value?.items?.length ? (
+              <SiteSidebarTree tree={$sections.value} />
             ) : null}
           </li>
         ))
@@ -44,7 +48,3 @@ const isActiveGroup =
     </ul>
   </div>
 </li>
-
-<script is:inline>
-  import { sections } from "../stores/site";
-</script>

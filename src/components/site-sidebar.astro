@@ -8,13 +8,13 @@ interface Props extends HTMLAttributes<"nav"> {}
 
 const { class: className, ...props } = Astro.props;
 
-const segment = "";
+const segment = ""; //useSelectedLayoutSegment
 ---
 
 <nav class={cn("mb-5", className)} {...props}>
   <ul>
     {
-      docsConfig.mainNav?.map((item, index) => (
+      docsConfig.mainNav?.map((item) => (
         <li class="md:hidden">
           <a
             href={item.disabled ? "#" : item.href}
@@ -41,5 +41,3 @@ const segment = "";
     }
   </ul>
 </nav>
-
-<script is:inline></script>

@@ -3,8 +3,8 @@ import { HTMLAttributes } from "astro/types";
 import { cn } from "../lib/utils";
 
 interface Props extends HTMLAttributes<"a"> {
-  active: boolean;
-  isAnchorLink: boolean;
+  active?: boolean;
+  isAnchorLink?: boolean;
 }
 
 const { href, active, isAnchorLink = false } = Astro.props;
@@ -25,10 +25,10 @@ const { href, active, isAnchorLink = false } = Astro.props;
   <span class="truncate"><slot /></span>
 </a>
 
-<script is:inline>
-  import { close } from "../stores/sidebar.ts";
+<script>
+  import { close } from "../stores/sidebar";
 
-  const isInsideMobileNavigation = useIsInsideMobileNavigation();
+  const isInsideMobileNavigation = false;
 
   function handleChangeRoute() {
     if (isInsideMobileNavigation) {
@@ -36,7 +36,6 @@ const { href, active, isAnchorLink = false } = Astro.props;
     }
   }
 
-  document
-    .getElementById("nav-link-anchor")
-    .addEventListener("click", handleChangeRoute);
+  const anchore = document.getElementById("nav-link-anchor");
+  anchore?.addEventListener("click", handleChangeRoute);
 </script>
