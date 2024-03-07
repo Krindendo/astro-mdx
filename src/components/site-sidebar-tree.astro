@@ -1,51 +1,33 @@
 ---
 import { cn } from "../lib/utils";
-import { Items } from "../stores/site";
-import { TableOfContents } from "../types";
+import { Item } from "../stores/site";
 import SiteSidebarNavLink from "./site-sidebar-nav-link.astro";
 
-const SIDEBAR_DEEP_LEVEL = 2;
+const SIDEBAR_DEEP_LEVEL = 3;
 
 interface Props {
-  tree: Items;
-  level?: number;
+  tree: Item[];
 }
 
-const { tree, level = 1 } = Astro.props;
-
-if (tree.items?.length === undefined || level > SIDEBAR_DEEP_LEVEL) {
-  return null;
-}
+const { tree } = Astro.props;
 ---
 
-{
-  level === 1 ? (
-    <ul>
-      {tree.items?.map((section) => (
-        <li>
-          <SiteSidebarNavLink href={section.url} isAnchorLink>
-            {section.title}
-          </SiteSidebarNavLink>
-          {tree.items?.length ? (
-            <Astro.self tree={section} level={level + 1} />
-          ) : null}
-        </li>
-      ))}
-    </ul>
-  ) : null
-}
-
-<ul class={cn("", { "pl-4": level !== 1 })}>
+<ul>
   {
-    tree.items?.map((section) => (
-      <li>
-        <SiteSidebarNavLink href={section.url} isAnchorLink>
-          {section.title}
-        </SiteSidebarNavLink>
-        {tree.items?.length ? (
-          <Astro.self tree={section} level={level + 1} />
-        ) : null}
-      </li>
-    ))
+    tree.map((section) =>
+      section.depth < SIDEBAR_DEEP_LEVEL ? (
+        <li
+          class={cn(
+            "",
+            { "ml-4": section.depth === 1 },
+            { "ml-8": section.depth === 2 }
+          )}
+        >
+          <SiteSidebarNavLink href={section.slug} isAnchorLink>
+            {section.text}
+          </SiteSidebarNavLink>
+        </li>
+      ) : null
+    )
   }
 </ul>

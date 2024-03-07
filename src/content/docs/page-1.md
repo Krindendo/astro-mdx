@@ -1,13 +1,13 @@
 ---
-title: Hello, World
+title: Page one
 pubDate: 2024-07-01
-description: description
+description: Very big description
 tags: [Begin, Something]
 ---
 
 # Hi there!
 
-This Markdown file creates a page at `your-domain.com/docs/`
+This Markdown file creates a page at `your-domain.com/docs/page-1/`
 
 It probably isn't styled much, but Markdown does support:
 
@@ -18,17 +18,21 @@ It probably isn't styled much, but Markdown does support:
 - [links](https://astro.build)
 - and more!
 
-## Another example
+## Special example
 
 Some text
 
 <Button>
-## NEsto
+## Secound page
 <h1>Something</h1>
 </Button>
 
 ```md
-## NEsto
+## Something
 
 <h1>Something</h1>
 ```
+
+# Title
+
+### Title 3

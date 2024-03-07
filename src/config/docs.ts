@@ -15,6 +15,10 @@ export const docsConfig: DocsConfig = {
           title: "Introduction",
           href: "/docs",
         },
+        {
+          title: "Page one",
+          href: "/docs/page-1",
+        },
       ],
     },
   ],

@@ -1,12 +1,6 @@
 ---
 import DocsPageHeader from "../components/docs-page-header.astro";
-import { InjectTOC, Item } from "../components/site-provider";
-
-interface DocsConfig {
-  title: string;
-  description: string;
-  toc: Item[];
-}
+import { injectToc, Item } from "../stores/site";
 
 interface Props {
   toc: Item[];
@@ -15,6 +9,9 @@ interface Props {
 }
 
 const { title, description, toc } = Astro.props;
+console.log("toc", toc);
+
+injectToc(toc);
 ---
 
 <div class="container flex-1">
@@ -23,6 +20,5 @@ const { title, description, toc } = Astro.props;
       <DocsPageHeader heading={title} text={description} />
       <div class="pb-12 pt-8"><slot /></div>
     </div>
-    <InjectTOC toc={toc} />
   </main>
 </div>

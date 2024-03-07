@@ -1,22 +1,18 @@
 import { atom } from "nanostores";
 
 export interface Item {
-  title: string;
-  url: string;
-  items?: Item[];
-}
-
-export interface Items {
-  items?: Item[];
+  text: string;
+  slug: string;
+  depth: number;
 }
 
 interface SidebarState {
-  sections: Items;
+  sections: Item[];
   visibleSections: string[];
   sectionIds: string[];
 }
 
-export const $sections = atom<Items>({});
+export const $sections = atom<Item[]>([]);
 export const $visibleSections = atom<string[]>([]);
 export const $sectionIds = atom<string[]>([]);
 
@@ -63,15 +59,19 @@ export function removeVisibleSection(id: string) {
 }
 
 export function setSectionIds(newSections: SidebarState["sections"]) {
-  if (newSections.items === undefined) {
+  if (newSections === undefined) {
     $sectionIds.set([]);
     return;
   }
-  const sectionIds = newSections.items
-    .flatMap((content) => [content.url, content.items?.map((item) => item.url)])
-    .flat()
-    .filter(Boolean)
-    .map((id) => id?.split("#")[1]);
+  const sectionIds = newSections
+    .filter((content) => content.depth < 3)
+    .map((content) => content.slug);
 
   $sectionIds.set(["_top", ...sectionIds] as string[]);
+}
+
+export function injectToc(items: Item[]) {
+  setSections(items);
+  setSectionIds(items);
+  setVisibleSections([]);
 }

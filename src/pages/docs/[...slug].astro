@@ -1,6 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 
+import Layout from "../../layouts/Layout.astro";
+import MDXLayoutDocs from "../../layouts/MDX-layout-docs.astro";
+
 export async function getStaticPaths() {
   const docsEntries = await getCollection("docs");
   return docsEntries.map((entry) => ({
@@ -11,9 +14,14 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
-console.log("props", headings);
 ---
 
-<div>
-  <Content />
-</div>
+<Layout title="docs">
+  <MDXLayoutDocs
+    title={entry.data.title}
+    description={entry.data.description}
+    toc={headings}
+  >
+    <Content />
+  </MDXLayoutDocs>
+</Layout>

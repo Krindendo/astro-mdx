@@ -13,7 +13,7 @@ interface Props {
 
 const { class: className, group } = Astro.props;
 
-const pathname = ""; //usePathname
+const pathname = "/docs"; //usePathname
 
 const isActiveGroup =
   group.items?.findIndex((link) => link.href === pathname) !== -1;
@@ -39,7 +39,7 @@ const isActiveGroup =
             >
               {item.title}
             </SiteSidebarNavLink>
-            {item.href === pathname && $sections.value?.items?.length ? (
+            {item.href === pathname && $sections.value?.length ? (
               <SiteSidebarTree tree={$sections.value} />
             ) : null}
           </li>
