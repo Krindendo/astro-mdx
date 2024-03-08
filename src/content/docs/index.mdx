@@ -22,13 +22,19 @@ It probably isn't styled much, but Markdown does support:
 
 Some text
 
-<Button>
-## NEsto
-<h1>Something</h1>
-</Button>
-
-```md
 ## NEsto
 
-<h1>Something</h1>
+```js
+function BookStore{
+  handleTitleChange(e) {
+    console.log('The new title is:', e.target.value);
+    // 'e' represents synthetic event
+    const nativeEvent = e.nativeEvent;
+    console.log(nativeEvent);
+    e.stopPropogation();
+    e.preventDefault();
+  }
+
+  return <input name="title" onChange={handleTitleChange} />
+}
 ```
