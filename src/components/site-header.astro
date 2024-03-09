@@ -1,5 +1,4 @@
 ---
-//import { useSelectedLayoutSegment } from "next/navigation";
 import { HTMLAttributes } from "astro/types";
 
 import { docsConfig } from "../config/docs";
@@ -15,7 +14,7 @@ import Logo from "./logo.astro";
 interface Props extends HTMLAttributes<"div"> {}
 
 const { class: className, ...props } = Astro.props;
-const segment = "";
+const segment = Astro.url.pathname; //useSelectedLayoutSegment
 ---
 
 <div

@@ -13,7 +13,7 @@ interface Props {
 
 const { class: className, group } = Astro.props;
 
-const pathname = "/docs"; //usePathname
+const pathname = Astro.url.pathname;
 
 const isActiveGroup =
   group.items?.findIndex((link) => link.href === pathname) !== -1;
