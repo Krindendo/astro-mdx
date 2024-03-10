@@ -2,22 +2,31 @@
 import { getCollection } from "astro:content";
 
 import Layout from "../../layouts/Layout.astro";
-import { Button } from "../../components/ui/button";
+import MdxCard from "../../components/mdx-card.astro";
+import MDXLayoutDocs from "../../layouts/MDX-layout-docs.astro";
 
 const allPosts = await getCollection("docs");
 ---
 
 <Layout title="docs">
-  <ul>
-    {
-      allPosts.map((post) => (
-        <div>
-          <p>{post.data.title}</p>
-          <Button>
-            <a href={`/docs/${post.slug}`}>Link</a>
-          </Button>
-        </div>
-      ))
-    }
-  </ul>
+  <MDXLayoutDocs
+    title="Documentation"
+    description="Everything starts here"
+    toc={[]}
+  >
+    <div class="grid sm:grid-cols-2 gap-4 mt-6">
+      {
+        allPosts.map((post) => (
+          <MdxCard href={`/docs/${post.slug}`}>
+            <h3 class="mt-8 scroll-m-20 text-2xl font-semibold tracking-tight">
+              {post.data.title}
+            </h3>
+            <p class="leading-7 [&:not(:first-child)]:mt-6">
+              {post.data.description}
+            </p>
+          </MdxCard>
+        ))
+      }
+    </div>
+  </MDXLayoutDocs>
 </Layout>

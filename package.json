@@ -23,7 +23,6 @@
     "autoprefixer": "^10.4.17",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "lucide": "^0.344.0",
     "lucide-react": "^0.344.0",
     "nanostores": "^0.10.0",
     "postcss": "^8.4.33",
@@ -32,8 +31,6 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.3.3",
-    "usehooks-ts": "^2.15.1",
-    "zustand": "^4.5.1"
+    "typescript": "^5.3.3"
   }
 }

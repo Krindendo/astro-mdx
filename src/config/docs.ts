@@ -16,12 +16,12 @@ export const docsConfig: DocsConfig = {
           href: "/docs",
         },
         {
-          title: "Page one",
-          href: "/docs/page-1",
+          title: "State Hooks",
+          href: "/docs/state-hooks",
         },
         {
-          title: "Page two",
-          href: "/docs/page-2",
+          title: "Context Hooks",
+          href: "/docs/context-hooks",
         },
       ],
     },

@@ -1,7 +1,6 @@
 import * as React from "react";
-//import { usePathname } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
-import { create } from "zustand";
+import { $isOpen, close, open, toggle } from "../stores/sidebar";
 
 import SiteHeader from "@/components/site-header.astro";
 
@@ -14,29 +13,11 @@ export function useIsInsideMobileNavigation() {
   return React.useContext(IsInsideMobileNavigationContext);
 }
 
-interface MobileNavigationState {
-  isOpen: boolean;
-  open: () => void;
-  close: () => void;
-  toggle: () => void;
-}
-
-export const useMobileNavigationStore = create<MobileNavigationState>(
-  (set) => ({
-    isOpen: false,
-    open: () => set({ isOpen: true }),
-    close: () => set({ isOpen: false }),
-    toggle: () => set((state) => ({ isOpen: !state.isOpen })),
-  })
-);
-
 export function SiteSidebarMobile() {
-  //const pathname = usePathname();
   const pathname = "";
   const lastPathName = React.useRef(pathname);
   let isInsideMobileNavigation = useIsInsideMobileNavigation();
-  let { isOpen, toggle, close } = useMobileNavigationStore();
-  let ToggleIcon = isOpen ? Icons.close : Icons.menu;
+  let ToggleIcon = $isOpen.value ? Icons.close : Icons.menu;
 
   React.useEffect(() => {
     if (pathname !== lastPathName.current) {
@@ -56,7 +37,7 @@ export function SiteSidebarMobile() {
         <ToggleIcon className="w-5 stroke-zinc-900 dark:stroke-white" />
       </button>
       {!isInsideMobileNavigation && (
-        <Transition.Root show={isOpen} as={React.Fragment}>
+        <Transition.Root show={$isOpen.value} as={React.Fragment}>
           <Dialog onClose={close} className="fixed inset-0 z-50 lg:hidden">
             <Transition.Child
               as={React.Fragment}
