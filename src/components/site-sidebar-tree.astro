@@ -3,31 +3,33 @@ import { cn } from "../lib/utils";
 import { Item } from "../stores/site";
 import SiteSidebarNavLink from "./site-sidebar-nav-link.astro";
 
-const SIDEBAR_DEEP_LEVEL = 3;
-
 interface Props {
   tree: Item[];
 }
 
 const { tree } = Astro.props;
+const depths = tree.map((section) => section.depth);
+const minDepth = Math.min(...depths);
 ---
 
 <ul>
   {
-    tree.map((section) =>
-      section.depth < SIDEBAR_DEEP_LEVEL ? (
-        <li
-          class={cn(
-            "",
-            { "ml-4": section.depth === 1 },
-            { "ml-8": section.depth === 2 }
-          )}
-        >
-          <SiteSidebarNavLink href={section.slug} isAnchorLink>
-            {section.text}
-          </SiteSidebarNavLink>
-        </li>
-      ) : null
-    )
+    tree.map((section) => (
+      <>
+        {section.depth <= minDepth + 1 ? (
+          <li
+            class={cn(
+              "",
+              { "ml-4": section.depth === minDepth },
+              { "ml-8": section.depth === minDepth + 1 }
+            )}
+          >
+            <SiteSidebarNavLink href={`#${section.slug}`} isAnchorLink>
+              {section.text}
+            </SiteSidebarNavLink>
+          </li>
+        ) : null}
+      </>
+    ))
   }
 </ul>
