@@ -4,11 +4,7 @@ import { HTMLAttributes } from "astro/types";
 import { docsConfig } from "../config/docs";
 import { cn } from "../lib/utils";
 import { ModeToggle } from "./mode-toggle";
-// import {
-//   SiteSidebarMobile,
-//   useIsInsideMobileNavigation,
-//   useMobileNavigationStore,
-// } from "../components/site-sidebar-mobile";
+import { SiteSidebarMobile } from "../components/site-sidebar-mobile";
 import Logo from "./logo.astro";
 
 interface Props extends HTMLAttributes<"div"> {}
@@ -30,7 +26,7 @@ const segment = Astro.url.pathname; //useSelectedLayoutSegment
   >
   </div>
   <div class="flex items-center gap-5 lg:hidden">
-    <!-- <SiteSidebarMobile /> -->
+    <SiteSidebarMobile client:only />
     <Logo />
   </div>
   <div class="ml-auto flex items-center gap-5">

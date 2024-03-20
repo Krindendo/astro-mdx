@@ -1,86 +1,91 @@
 import * as React from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { $isOpen, close, open, toggle } from "../stores/sidebar";
 
-import SiteHeader from "@/components/site-header.astro";
-
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { siteConfig } from "@/config/site";
 import { Icons } from "./icons";
-import SiteSidebar from "./site-sidebar.astro";
-
-const IsInsideMobileNavigationContext = React.createContext(false);
-
-export function useIsInsideMobileNavigation() {
-  return React.useContext(IsInsideMobileNavigationContext);
-}
+import { docsConfig } from "@/config/docs";
 
 export function SiteSidebarMobile() {
-  const pathname = "";
-  const lastPathName = React.useRef(pathname);
-  let isInsideMobileNavigation = useIsInsideMobileNavigation();
-  let ToggleIcon = $isOpen.value ? Icons.close : Icons.menu;
-
-  React.useEffect(() => {
-    if (pathname !== lastPathName.current) {
-      lastPathName.current = pathname;
-      close();
-    }
-  }, [close, pathname]);
+  const [open, setOpen] = React.useState(false);
 
   return (
-    <IsInsideMobileNavigationContext.Provider value={true}>
-      <button
-        type="button"
-        className="flex h-6 w-6 items-center justify-center rounded-md transition hover:bg-zinc-900/5 dark:hover:bg-white/5"
-        aria-label="Toggle navigation"
-        onClick={toggle}
-      >
-        <ToggleIcon className="w-5 stroke-zinc-900 dark:stroke-white" />
-      </button>
-      {!isInsideMobileNavigation && (
-        <Transition.Root show={$isOpen.value} as={React.Fragment}>
-          <Dialog onClose={close} className="fixed inset-0 z-50 lg:hidden">
-            <Transition.Child
-              as={React.Fragment}
-              enter="duration-300 ease-out"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="duration-200 ease-in"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 top-14 bg-zinc-400/20 backdrop-blur-sm dark:bg-black/40" />
-            </Transition.Child>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="mr-2 h-8 px-1.5 md:hidden"
+        >
+          <Icons.menu className="size-5" />
+          <span className="sr-only">Toggle Menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="pr-0">
+        <a href="/" className="flex items-center">
+          <Icons.logo className="mr-2 size-8" />
+          <span className="font-bold">{siteConfig.name}</span>
+        </a>
+        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-10">
+          <div className="mt-2 mb-20">
+            {docsConfig.mainNav?.length ? (
+              <div className="flex flex-col space-y-3">
+                {docsConfig.mainNav?.map(
+                  (item) =>
+                    item.href && (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        className="text-muted-foreground"
+                        onClick={() =>
+                          item.href.startsWith("/#")
+                            ? setOpen(false)
+                            : undefined
+                        }
+                      >
+                        {item.title}
+                      </a>
+                    )
+                )}
+              </div>
+            ) : null}
 
-            <Dialog.Panel>
-              <Transition.Child
-                as={React.Fragment}
-                enter="duration-300 ease-out"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="duration-200 ease-in"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <SiteHeader />
-              </Transition.Child>
+            {docsConfig.sidebarNavDocs?.length ? (
+              <div className="flex flex-col space-y-2">
+                {docsConfig.sidebarNavDocs.map((item, index) => {
+                  const activeItems = item?.items?.filter(
+                    (subItem) => !subItem.disabled
+                  );
 
-              <Transition.Child
-                as={React.Fragment}
-                enter="duration-500 ease-in-out"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
-                leave="duration-500 ease-in-out"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full"
-              >
-                <div className="fixed bottom-0 left-0 top-14 w-full overflow-y-auto bg-white px-4 pb-4 pt-6 shadow-lg shadow-zinc-900/10 ring-1 ring-zinc-900/10 dark:bg-zinc-900 dark:ring-zinc-800 min-[416px]:max-w-sm sm:px-6 sm:pb-10">
-                  <SiteSidebar />
-                </div>
-              </Transition.Child>
-            </Dialog.Panel>
-          </Dialog>
-        </Transition.Root>
-      )}
-    </IsInsideMobileNavigationContext.Provider>
+                  if (!activeItems || activeItems.length === 0) return null;
+
+                  return (
+                    <div key={index} className="flex flex-col space-y-3 pt-6">
+                      <h4 className="font-medium">{item.title}</h4>
+                      {activeItems.map((subItem, idx) => (
+                        <React.Fragment key={subItem.href ?? "" + idx}>
+                          {subItem.href ? (
+                            <a
+                              href={subItem.href}
+                              target={subItem?.external ? "_blank" : undefined}
+                              className="text-muted-foreground"
+                            >
+                              {subItem.title}
+                            </a>
+                          ) : (
+                            subItem.title
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
   );
 }
